@@ -1,16 +1,19 @@
-import React from 'react'
 import axios from 'axios'
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
+const API_URL = import.meta.env.VITE_API_URL;
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const formSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true)
 
         const user = {
             username,
@@ -20,14 +23,17 @@ const RegisterPage = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8000/user/register',
-                user
+                `${API_URL}/api/user/register`,
+                user,
+                { withCredentials: true }
             )
-
             toast.success('Successfully Register')
+            navigate('/dashboard')
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -135,9 +141,14 @@ const RegisterPage = () => {
                         {/* Register Button */}
                         <button
                             type="submit"
-                            className="w-full rounded-xl bg-blue-600 py-3.5 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.98]"
+                            disabled={loading}
+                            aria-busy={loading}
+                            className="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 py-3.5 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
                         >
-                            Create Account
+                            {loading && (
+                                <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-700 border-t-blue-200" />
+                            )}
+                            {loading ? 'Creating account...' : 'Create Account'}
                         </button>
 
                     </form>
@@ -179,4 +190,3 @@ const RegisterPage = () => {
 }
 
 export default RegisterPage
-

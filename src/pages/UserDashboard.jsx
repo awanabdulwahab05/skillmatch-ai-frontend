@@ -2,32 +2,59 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router'
+const API_URL = import.meta.env.VITE_API_URL;
 
 const UserDashboard = () => {
     const [jobDescription, setJobDescription] = useState('')
     const [selfDescription, setSelfDescription] = useState('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const navigate = useNavigate()
 
+    // Form Submit
     const formSubmit = async (e) => {
         e.preventDefault()
+        if (isSubmitting) return
+
+        setIsSubmitting(true)
 
         try {
             const response = await axios.post(
-                'http://localhost:8000/api/job/analysis',
+                `${API_URL}/api/job/analysis`,
                 { jobDescription, selfDescription },
                 {
                     withCredentials: true
                 }
             )
-
-            toast.success('Job analysis start!')
-
-            console.log(response.data.result)
             navigate(`/analysis-result/${response.data.result._id}`)
         } catch (error) {
             console.log(error, 'Error in job-analysis')
             toast.error('Error in job Analysis')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    // Logout
+    const logout = async () => {
+        try {
+            await axios.get(`${API_URL}/api/user/logout`,
+                { withCredentials: true }
+            )
+            toast.success('Logout Successfully!')
+            navigate('/')
+        } catch (error) {
+            console.log(error)
+            toast.error("Can't logout")
+        }
+    }
+
+    // Previos Report
+    const previosReport = async () => {
+        try {
+
+        } catch (error) {
+
         }
     }
 
@@ -54,6 +81,7 @@ const UserDashboard = () => {
 
                         <button
                             type="button"
+                            onClick={logout}
                             className="rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
                         >
                             Logout
@@ -73,16 +101,21 @@ const UserDashboard = () => {
 
                 <div className="relative z-10 mx-auto max-w-5xl px-6 py-16">
 
+                    {/* Previos Analysis */}
+                    <div className='mb-3 text-center'>
+                        <button
+                            type="button"
+                            onClick={() => navigate('/my-reports')}
+                            className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-400"
+                        >
+                            <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                            Previos Report
+                        </button>
+                    </div>
+
+
                     {/* Heading */}
                     <div className="mb-10 text-center">
-
-                        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-sm text-blue-400">
-
-                            <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-
-                            AI Job Analysis
-
-                        </div>
 
 
                         <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
@@ -103,6 +136,7 @@ const UserDashboard = () => {
                     {/* Form */}
                     <form
                         onSubmit={formSubmit}
+                        aria-busy={isSubmitting}
                         className="rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl shadow-blue-950/20 md:p-8"
                     >
 
@@ -183,16 +217,26 @@ const UserDashboard = () => {
                         {/* Submit */}
                         <button
                             type="submit"
-                            className="group flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.99]"
+                            disabled={isSubmitting}
+                            className="group flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
                         >
 
+                            {isSubmitting && (
+                                <span
+                                    aria-hidden="true"
+                                    className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
+                                />
+                            )}
+
                             <span>
-                                Analyze Job With AI
+                                {isSubmitting ? 'Analyzing...' : 'Analyze Job With AI'}
                             </span>
 
-                            <span className="text-lg transition-transform group-hover:translate-x-1">
-                                →
-                            </span>
+                            {!isSubmitting && (
+                                <span className="text-lg transition-transform group-hover:translate-x-1">
+                                    →
+                                </span>
+                            )}
 
                         </button>
 

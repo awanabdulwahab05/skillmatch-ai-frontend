@@ -1,13 +1,14 @@
-import React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router'
 import axios from 'axios'
+const API_URL = import.meta.env.VITE_API_URL;
 
 const LoginPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -18,22 +19,23 @@ const LoginPage = () => {
 
     const formSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true)
 
         try {
             const response = await axios.post(
-                'http://localhost:8000/user/login',
+                `${API_URL}/api/user/login`,
                 user,
                 {
                     withCredentials: true
                 }
             )
-
             toast.success('Login Success!')
             navigate('/dashboard')
-
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.message)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -121,9 +123,14 @@ const LoginPage = () => {
                         {/* Login Button */}
                         <button
                             type="submit"
-                            className="w-full rounded-xl bg-blue-600 py-3.5 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.98]"
+                            disabled={loading}
+                            aria-busy={loading}
+                            className="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 py-3.5 font-semibold text-white transition hover:bg-blue-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
                         >
-                            Login
+                            {loading && (
+                                <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-700 border-t-blue-200" />
+                            )}
+                            {loading ? 'Logging in...' : 'Login'}
                         </button>
 
                     </form>
