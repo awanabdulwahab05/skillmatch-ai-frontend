@@ -171,7 +171,7 @@ const SingleReport = () => {
                         </div>
 
 
-                        <div className="flex h-36 w-36 items-center justify-center rounded-full border-[10px] border-blue-500/20">
+                        <div className="flex h-36 w-36 items-center justify-center rounded-full border-10 border-blue-500/20">
 
                             <div className="flex h-28 w-28 items-center justify-center rounded-full border-4 border-blue-500">
 
