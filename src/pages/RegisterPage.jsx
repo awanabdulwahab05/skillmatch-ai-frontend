@@ -22,7 +22,7 @@ const RegisterPage = () => {
         }
 
         try {
-            const response = await axios.post(
+            await axios.post(
                 `${API_URL}/api/user/register`,
                 user,
                 { withCredentials: true }
@@ -166,6 +166,16 @@ const RegisterPage = () => {
                             Login
                         </Link>
 
+                    </p>
+
+                    <p className="mt-3 text-center text-sm text-slate-500">
+                        Just browsing?{' '}
+                        <Link
+                            to="/analyze"
+                            className="font-medium text-blue-400 transition hover:text-blue-300 hover:underline"
+                        >
+                            Continue as a guest
+                        </Link>
                     </p>
 
                 </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router";
 
 const Homepage = () => {
@@ -90,10 +89,10 @@ const Homepage = () => {
                         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
 
                             <Link
-                                to="/register"
+                                to="/analyze"
                                 className="rounded-xl bg-blue-600 px-7 py-3.5 text-center font-semibold transition hover:bg-blue-500"
                             >
-                                Analyze My Job Match
+                                Try a Free Analysis
                             </Link>
 
                             <a

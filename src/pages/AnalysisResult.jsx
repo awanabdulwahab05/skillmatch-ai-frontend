@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link, useParams } from 'react-router'
+import { Link, useLocation, useParams } from 'react-router'
 const API_URL = import.meta.env.VITE_API_URL;
 
 const AnalysisResult = () => {
 
     const { id } = useParams()
-    const [analysis, setAnalysis] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const location = useLocation()
+    const guestAnalysis = location.state?.guestAnalysis
+    const [analysis, setAnalysis] = useState(guestAnalysis || null)
+    const [loading, setLoading] = useState(!guestAnalysis && Boolean(id))
 
     useEffect(() => {
+
+        if (guestAnalysis || !id) return
 
         const getAnalysis = async () => {
             try {
@@ -31,7 +35,7 @@ const AnalysisResult = () => {
 
         getAnalysis()
 
-    }, [id])
+    }, [id, guestAnalysis])
 
 
     if (loading) {
@@ -72,7 +76,7 @@ const AnalysisResult = () => {
                     </p>
 
                     <Link
-                        to="/dashboard"
+                        to={guestAnalysis ? "/analyze" : "/dashboard"}
                         className="mt-6 inline-block rounded-xl bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-500"
                     >
                         Back to Dashboard
@@ -105,7 +109,7 @@ const AnalysisResult = () => {
                     </Link>
 
                     <Link
-                        to="/dashboard"
+                        to={guestAnalysis ? "/analyze" : "/dashboard"}
                         className="rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
                     >
                         New Analysis
@@ -424,7 +428,7 @@ const AnalysisResult = () => {
                         </p>
 
                         <Link
-                            to="/dashboard"
+                            to={guestAnalysis ? "/analyze" : "/dashboard"}
                             className="mt-6 inline-block rounded-xl bg-blue-600 px-7 py-3 font-semibold transition hover:bg-blue-500"
                         >
                             New Analysis
