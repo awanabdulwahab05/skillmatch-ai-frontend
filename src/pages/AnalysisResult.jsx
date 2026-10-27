@@ -382,40 +382,6 @@ const AnalysisResult = () => {
                     </div>
 
 
-                    {/* Descriptions */}
-                    <div className="mt-6 grid gap-6 md:grid-cols-2">
-
-
-                        {/* Job Description */}
-                        <div className="rounded-2xl border border-white/10 bg-slate-900 p-6">
-
-                            <h2 className="text-lg font-semibold">
-                                Job Description
-                            </h2>
-
-                            <p className="mt-4 whitespace-pre-line text-sm leading-7 text-slate-400">
-                                {analysis.jobDescription}
-                            </p>
-
-                        </div>
-
-
-                        {/* Self Description */}
-                        <div className="rounded-2xl border border-white/10 bg-slate-900 p-6">
-
-                            <h2 className="text-lg font-semibold">
-                                Your Profile
-                            </h2>
-
-                            <p className="mt-4 whitespace-pre-line text-sm leading-7 text-slate-400">
-                                {analysis.selfDescription}
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
                     {/* Bottom CTA */}
                     <div className="mt-8 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-8 text-center">
 
